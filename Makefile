@@ -1,11 +1,10 @@
 CC := gcc
-CFLAGS := -Wall -Wextra
-CFILES := main.c
-
-INCLUDES := -I./include
+CFLAGS := -Wall
+INCLUDES := -Iinclude
+LIBS := `pkg-config --cflags --libs sdl2 SDL2_image` -lGL -ldl
+CFILES := $(wildcard src/*.c)
 
 .PHONY: build
 
 build:
-	$(CC) $(CFLAGS) -o main $(CFILES) $(INCLUDES)
-
+	$(CC) $(CFLAGS) $(INCLUDES) $(CFILES) -o main $(LIBS)

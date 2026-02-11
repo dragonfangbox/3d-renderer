@@ -2,7 +2,25 @@
 #define TYPES_H
 
 #include <stdint.h>
+typedef struct {
+	float x;
+	float y;
+} vector2_t;
 
+typedef struct {
+	float x;
+	float y;
+	float z;
+} vector3_t;
+
+typedef struct {
+	float x;
+	float y;
+	float z;
+	float w;
+} vector4_t;
+
+typedef uint8_t bool;
 #define TRUE 1
 #define FALSE 0
 
