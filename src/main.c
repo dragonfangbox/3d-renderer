@@ -27,6 +27,9 @@ int main() {
 
 	glViewport(0, 0, 1280, 720);
 
+	renderer_t renderer;
+	RENDERER_init(&renderer);
+
 	bool running = TRUE;
 	while(running) {
 		SDL_Event event;
@@ -36,9 +39,9 @@ int main() {
 			}
 		}
 
-		RENDERER_update();
+		RENDERER_update(&renderer);
 
-		RENDERER_render(window);
+		RENDERER_render(&renderer, window);
 	}
 
 	SDL_Quit();

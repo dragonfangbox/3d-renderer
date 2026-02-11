@@ -11,12 +11,12 @@
       "-I/usr/include/x86_64-linux-gnu",
       "-I/usr/include/webp",
       "-o",
-      "renderer",
+      "main",
       "src/gl.c"
     ],
     "directory": "/home/josiah/projects/3d-opengl-renderer",
     "file": "/home/josiah/projects/3d-opengl-renderer/src/gl.c",
-    "output": "/home/josiah/projects/3d-opengl-renderer/renderer"
+    "output": "/home/josiah/projects/3d-opengl-renderer/main"
   },
   {
     "arguments": [
@@ -30,12 +30,12 @@
       "-I/usr/include/x86_64-linux-gnu",
       "-I/usr/include/webp",
       "-o",
-      "renderer",
+      "main",
       "src/main.c"
     ],
     "directory": "/home/josiah/projects/3d-opengl-renderer",
     "file": "/home/josiah/projects/3d-opengl-renderer/src/main.c",
-    "output": "/home/josiah/projects/3d-opengl-renderer/renderer"
+    "output": "/home/josiah/projects/3d-opengl-renderer/main"
   },
   {
     "arguments": [
@@ -49,12 +49,12 @@
       "-I/usr/include/x86_64-linux-gnu",
       "-I/usr/include/webp",
       "-o",
-      "renderer",
+      "main",
       "src/renderer.c"
     ],
     "directory": "/home/josiah/projects/3d-opengl-renderer",
     "file": "/home/josiah/projects/3d-opengl-renderer/src/renderer.c",
-    "output": "/home/josiah/projects/3d-opengl-renderer/renderer"
+    "output": "/home/josiah/projects/3d-opengl-renderer/main"
   },
   {
     "arguments": [
@@ -68,11 +68,11 @@
       "-I/usr/include/x86_64-linux-gnu",
       "-I/usr/include/webp",
       "-o",
-      "renderer",
+      "main",
       "src/sdl.c"
     ],
     "directory": "/home/josiah/projects/3d-opengl-renderer",
     "file": "/home/josiah/projects/3d-opengl-renderer/src/sdl.c",
-    "output": "/home/josiah/projects/3d-opengl-renderer/renderer"
+    "output": "/home/josiah/projects/3d-opengl-renderer/main"
   }
 ]

@@ -3,17 +3,19 @@
 
 #include <SDL2/SDL.h>
 #include "glad/gl.h"
-#include "types.h"
+
 #define ARENA_IMPLEMENTATION
 #include "arena.h"
+#include "types.h"
 
 typedef struct {
 	Arena_t arena;
-	u16 VBO;
+	GLuint VBO;
+	GLuint VAO;
 } renderer_t;
 
 void RENDERER_init(renderer_t* r);
-void RENDERER_update();
-void RENDERER_render(SDL_Window* window);
+void RENDERER_update(renderer_t* r);
+void RENDERER_render(renderer_t* r, SDL_Window* window);
 
 #endif
