@@ -4,7 +4,6 @@
 #include <SDL2/SDL.h>
 #include "glad/gl.h"
 
-#define ARENA_IMPLEMENTATION
 #include "arena.h"
 #include "types.h"
 

@@ -1,8 +1,10 @@
-#include "types.h"
-#include "arena.h"
 
+#define ARENA_IMPLEMENTATION
+#include "arena.h"
+#include "types.h"
 #include "renderer.h"
 #include "sdl.h"
+#include "shader.h"
 
 int main() {
 	
@@ -23,12 +25,32 @@ int main() {
 		return -1;
 	}
 
-	printf("OpenGL: %s\n", glGetString(GL_VERSION));
+	printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
 
 	glViewport(0, 0, 1280, 720);
 
 	renderer_t renderer;
 	RENDERER_init(&renderer);
+
+	SHADER_init(MiB);
+	const char* fragShadersrc = SHADER_loadShader("./src/shaders/fragment-shader.frag");
+	const char* vertShadersrc = SHADER_loadShader("./src/shaders/vertex-shader.vert");
+
+	u16 fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragShader, 1, &fragShadersrc, NULL);
+	glCompileShader(fragShader);
+
+	u16 vertShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertShader, 1, &vertShadersrc, NULL);
+	glCompileShader(vertShader);
+
+	u16 program = glCreateProgram();
+	glAttachShader(program, fragShader);
+	glAttachShader(program, vertShader);
+	glLinkProgram(program);
+
+	glDeleteShader(vertShader);
+	glDeleteShader(fragShader);
 
 	bool running = TRUE;
 	while(running) {
@@ -41,6 +63,7 @@ int main() {
 
 		RENDERER_update(&renderer);
 
+		glUseProgram(program);
 		RENDERER_render(&renderer, window);
 	}
 

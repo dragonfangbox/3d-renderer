@@ -1,6 +1,5 @@
 #include "renderer.h"
 
-
 typedef struct {
 	vector3_t pos;
 	vector3_t color;
