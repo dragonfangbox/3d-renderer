@@ -4,6 +4,7 @@
       "/usr/bin/gcc",
       "-c",
       "-Wall",
+      "-std=c11",
       "-Iinclude",
       "-I/usr/include/SDL2",
       "-D_REENTRANT",
@@ -23,6 +24,7 @@
       "/usr/bin/gcc",
       "-c",
       "-Wall",
+      "-std=c11",
       "-Iinclude",
       "-I/usr/include/SDL2",
       "-D_REENTRANT",
@@ -42,6 +44,7 @@
       "/usr/bin/gcc",
       "-c",
       "-Wall",
+      "-std=c11",
       "-Iinclude",
       "-I/usr/include/SDL2",
       "-D_REENTRANT",
@@ -61,6 +64,7 @@
       "/usr/bin/gcc",
       "-c",
       "-Wall",
+      "-std=c11",
       "-Iinclude",
       "-I/usr/include/SDL2",
       "-D_REENTRANT",
@@ -73,6 +77,26 @@
     ],
     "directory": "/home/josiah/projects/3d-opengl-renderer",
     "file": "/home/josiah/projects/3d-opengl-renderer/src/sdl.c",
+    "output": "/home/josiah/projects/3d-opengl-renderer/main"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-Wall",
+      "-std=c11",
+      "-Iinclude",
+      "-I/usr/include/SDL2",
+      "-D_REENTRANT",
+      "-I/usr/include/libpng16",
+      "-I/usr/include/x86_64-linux-gnu",
+      "-I/usr/include/webp",
+      "-o",
+      "main",
+      "src/shader.c"
+    ],
+    "directory": "/home/josiah/projects/3d-opengl-renderer",
+    "file": "/home/josiah/projects/3d-opengl-renderer/src/shader.c",
     "output": "/home/josiah/projects/3d-opengl-renderer/main"
   }
 ]

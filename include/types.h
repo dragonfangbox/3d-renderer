@@ -20,6 +20,11 @@ typedef struct {
 	float w;
 } vector4_t;
 
+typedef struct {
+	vector3_t pos;
+	vector3_t color;
+} vertex_t;
+
 typedef uint8_t bool;
 #define TRUE 1
 #define FALSE 0

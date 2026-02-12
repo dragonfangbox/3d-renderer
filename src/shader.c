@@ -14,12 +14,14 @@ char* SHADER_loadShader(char* file) {
 	FILE* shaderFile = fopen(file, "r");
 
 	fseek(shaderFile, 0, SEEK_END);
-	u32 len = ftell(shaderFile) + 1;
+	u32 len = ftell(shaderFile);
 	fseek(shaderFile, 0, SEEK_SET);
 
-	char* data = Arena_alloc(&arena, len);
+	char* data = Arena_alloc(&arena, len + 1);
 
 	fread(data, sizeof(char), len, shaderFile);
+
+	data[len + 1] = '\0';
 
 	return data;
 }
