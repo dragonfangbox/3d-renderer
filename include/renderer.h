@@ -7,15 +7,23 @@
 #include "arena.h"
 #include "types.h"
 #include "dynarr.h"
+#include "cglm/cglm.h"
 
 typedef struct {
 	GLuint VBO;
-	u32 indexCount;
+	u32 vertCount;
 } mesh_t;
 
 typedef struct {
+	// shader
+	// texture
+} material_t;
+
+typedef struct {
 	mesh_t* mesh;
+	material_t* material;
 	GLuint VAO;
+	mat4 model;
 	// add model transform matrix
 } renderObject_t;
 
@@ -24,7 +32,7 @@ ARRAY_DEFINE(renderObjectArray_t, renderObject_t);
 
 typedef struct {
 	Arena_t arena;
-	renderObjectArray_t instances;
+	renderObjectArray_t objects;
 } renderer_t;
 
 void RENDERER_init(renderer_t* r);
@@ -34,5 +42,6 @@ void RENDERER_destroy(renderer_t* r);
 
 void RENDERER_initMesh(mesh_t* m, vertArray_t vertices, float* indices);
 void RENDERER_initRenderObject(renderObject_t* o, mesh_t* m);
+void RENDERER_pushObject(renderer_t* r, renderObject_t o);
 
 #endif
