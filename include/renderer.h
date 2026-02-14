@@ -11,11 +11,12 @@
 
 typedef struct {
 	GLuint VBO;
+	GLuint EBO;
 	u32 vertCount;
 } mesh_t;
 
 typedef struct {
-	// shader
+	GLuint shader;
 	// texture
 } material_t;
 
@@ -24,7 +25,6 @@ typedef struct {
 	material_t* material;
 	GLuint VAO;
 	mat4 model;
-	// add model transform matrix
 } renderObject_t;
 
 ARRAY_DEFINE(vertArray_t, vertex_t);
@@ -41,7 +41,10 @@ void RENDERER_render(renderer_t* r, SDL_Window* window);
 void RENDERER_destroy(renderer_t* r);
 
 void RENDERER_initMesh(mesh_t* m, vertArray_t vertices, float* indices);
-void RENDERER_initRenderObject(renderObject_t* o, mesh_t* m);
+void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat);
+void RENDERER_initMaterial(material_t* m, GLuint program);
+
 void RENDERER_pushObject(renderer_t* r, renderObject_t o);
+void RENDERER_translateObject(renderObject_t* o, float x, float y, float z);
 
 #endif

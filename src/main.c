@@ -52,11 +52,10 @@ int main() {
 	renderer_t renderer;
 	RENDERER_init(&renderer);
 
-
 	renderObject_t testObj;
-	renderObject_t testObj2;
-
 	mesh_t triangleMesh;
+	material_t defaultMaterial;
+
 	vertArray_t triangleVertices;
 	ARRAY_INIT(&triangleVertices);
 	ARRAY_APPEND(&triangleVertices, ((vertex_t){{0.5, -1, 0}, {1, 0, 0}}));
@@ -64,19 +63,13 @@ int main() {
 	ARRAY_APPEND(&triangleVertices, ((vertex_t){{-0.5, -1, 0}, {0, 0, 1}}));
 	RENDERER_initMesh(&triangleMesh, triangleVertices, NULL);
 
-	mesh_t triangleMesh2;
-	vertArray_t triangleVertices2;
-	ARRAY_INIT(&triangleVertices2);
-	ARRAY_APPEND(&triangleVertices2, ((vertex_t){{-1, -1, 0}, {1, 1, 0}}));
-	ARRAY_APPEND(&triangleVertices2, ((vertex_t){{-1, 1, 0}, {0, 1, 1}}));
-	ARRAY_APPEND(&triangleVertices2, ((vertex_t){{0, 1, 0}, {1, 0, 1}}));
-	RENDERER_initMesh(&triangleMesh2, triangleVertices2, NULL);
+	RENDERER_initMaterial(&defaultMaterial, program);
 
-	RENDERER_initRenderObject(&testObj, &triangleMesh);
-	RENDERER_initRenderObject(&testObj2, &triangleMesh2);
+	RENDERER_initRenderObject(&testObj, &triangleMesh, &defaultMaterial);
+
+	RENDERER_translateObject(&testObj, 0.2, 0.5, 0.4);
 
 	RENDERER_pushObject(&renderer, testObj);
-	RENDERER_pushObject(&renderer, testObj2);
 
 	bool running = TRUE;
 	while(running) {
@@ -89,7 +82,6 @@ int main() {
 
 		RENDERER_update(&renderer);
 
-		glUseProgram(program);
 		RENDERER_render(&renderer, window);
 	}
 

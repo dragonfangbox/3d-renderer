@@ -2,17 +2,7 @@
 
 void RENDERER_init(renderer_t* r) {
 	Arena_init(&r->arena, MiB);
-	ARRAY_INIT(&r->objects); // figure out a nice interface to add renderObjects to
-							   // the instances array.
-
-//	ARRAY_INIT(&triangleVertices);
-//	ARRAY_APPEND(&triangleVertices, ((vertex_t){{1, -1, 0}, {1, 0, 0}}));
-//	ARRAY_APPEND(&triangleVertices, ((vertex_t){{0, 1, 0}, {0, 1, 0}}));
-//	ARRAY_APPEND(&triangleVertices, ((vertex_t){{-1, -1, 0}, {0, 0, 1}}));
-//
-//	RENDERER_initMesh(&triangleMesh, triangleVertices, NULL);
-//	RENDERER_initRenderObject(&testObj, &triangleMesh);
-
+	ARRAY_INIT(&r->objects);
 }
 
 void RENDERER_update(renderer_t* r) { 
@@ -24,6 +14,7 @@ void RENDERER_render(renderer_t* r, SDL_Window* window) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	for (u16 i = 0; i < r->objects.size; i++) {
+		glUseProgram(r->objects.data[i].material->shader);
 		glBindVertexArray(r->objects.data[i].VAO);
 		glDrawArrays(GL_TRIANGLES, 0, r->objects.data[i].mesh->vertCount);
 	}
@@ -50,13 +41,14 @@ void RENDERER_initMesh(mesh_t* m, vertArray_t vertices, float* indices) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void RENDERER_initRenderObject(renderObject_t* o, mesh_t* m) {
-	o->mesh = m;
+void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat) {
+	o->mesh = mesh;
+	o->material = mat;
 
 	glGenVertexArrays(1, &o->VAO);
 	glBindVertexArray(o->VAO);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m->VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->VBO);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, pos));
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, color));
@@ -67,11 +59,21 @@ void RENDERER_initRenderObject(renderObject_t* o, mesh_t* m) {
 	glBindVertexArray(0);
 }
 
+void RENDERER_translateObject(renderObject_t* o, float x, float y, float z) {
+	vec3 t = {x, y, z};
+	glm_translate(o->model, t);
+}
+
 void RENDERER_pushObject(renderer_t* r, renderObject_t o) {
 	ARRAY_APPEND(&r->objects, (o));
+}
+
+void RENDERER_initMaterial(material_t* m, GLuint program) {
+	m->shader = program;
 }
 
 void RENDERER_destroy(renderer_t* r) {
 	Arena_free(&r->arena);
 	ARRAY_FREE(&r->objects);
 }
+
