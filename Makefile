@@ -8,10 +8,10 @@ CFILES := $(wildcard src/*.c)
 .PHONY: build debug
 
 build:
-	$(CC) $(CFLAGS) $(INCLUDES) $(CFILES) -o main $(LIBS)
+	$(CC) $(CFLAGS) $(INCLUDES) $(CFILES) -o main.out $(LIBS)
 
 debug:
-	$(CC) $(CLFAGS) $(DFLAGS) $(INCLUDES) $(CFILES) -o main $(LIBS)
+	$(CC) $(CLFAGS) $(DFLAGS) $(INCLUDES) $(CFILES) -o main.out $(LIBS)
 
 
 
