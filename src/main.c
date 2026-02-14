@@ -71,8 +71,12 @@ int main() {
 
 	RENDERER_pushObject(&renderer, testObj);
 
+	u64 lastTime = 0;
 	bool running = TRUE;
 	while(running) {
+		u64 currentTime = SDL_GetTicks64();
+		
+
 		SDL_Event event;
 		while((SDL_PollEvent(&event))) {
 			if (event.type == SDL_QUIT) {
@@ -80,9 +84,13 @@ int main() {
 			}
 		}
 
-		RENDERER_update(&renderer);
+//		RENDERER_update(&renderer);
 
+		RENDERER_rotateObject(&testObj, 1, 0, 0, 1);
+		RENDERER_setUniformMat4(&defaultMaterial, "model", testObj.model);
 		RENDERER_render(&renderer, window);
+
+		lastTime = currentTime;
 	}
 
 	RENDERER_destroy(&renderer);

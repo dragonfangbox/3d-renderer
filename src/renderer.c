@@ -6,7 +6,7 @@ void RENDERER_init(renderer_t* r) {
 }
 
 void RENDERER_update(renderer_t* r) { 
-
+	
 }
 
 void RENDERER_render(renderer_t* r, SDL_Window* window) {
@@ -44,6 +44,7 @@ void RENDERER_initMesh(mesh_t* m, vertArray_t vertices, float* indices) {
 void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat) {
 	o->mesh = mesh;
 	o->material = mat;
+	glm_mat4_identity(o->model);
 
 	glGenVertexArrays(1, &o->VAO);
 	glBindVertexArray(o->VAO);
@@ -60,8 +61,14 @@ void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat)
 }
 
 void RENDERER_translateObject(renderObject_t* o, float x, float y, float z) {
-	vec3 t = {x, y, z};
-	glm_translate(o->model, t);
+	vec3 v = {x, y, z};
+	glm_translate(o->model, v);
+}
+
+void RENDERER_rotateObject(renderObject_t* o, float angle, float x, float y, float z) {
+	vec3 v = {x, y, z};
+	
+	glm_rotate(o->model, glm_rad(angle), v);
 }
 
 void RENDERER_pushObject(renderer_t* r, renderObject_t o) {
@@ -70,6 +77,11 @@ void RENDERER_pushObject(renderer_t* r, renderObject_t o) {
 
 void RENDERER_initMaterial(material_t* m, GLuint program) {
 	m->shader = program;
+}
+
+void RENDERER_setUniformMat4(material_t* m, const char* name, mat4 mat) {
+	GLuint location = glGetUniformLocation(m->shader, name);
+	glUniformMatrix4fv(location, 1, GL_FALSE, (float*)mat);
 }
 
 void RENDERER_destroy(renderer_t* r) {

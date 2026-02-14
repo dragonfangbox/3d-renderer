@@ -46,5 +46,9 @@ void RENDERER_initMaterial(material_t* m, GLuint program);
 
 void RENDERER_pushObject(renderer_t* r, renderObject_t o);
 void RENDERER_translateObject(renderObject_t* o, float x, float y, float z);
+void RENDERER_rotateObject(renderObject_t* o, float angle, float x, float y, float z);
+
+
+void RENDERER_setUniformMat4(material_t* m, const char* name, mat4 mat);
 
 #endif

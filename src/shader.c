@@ -1,7 +1,5 @@
 #include "shader.h"
 
-#include <stdio.h>
-
 #include "arena.h"
 
 static Arena_t arena;
