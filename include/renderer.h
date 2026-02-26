@@ -8,7 +8,6 @@
 #include "types.h"
 #include "dynarr.h"
 #include "gmath.h"
-//#include "cglm/cglm.h"
 
 typedef struct {
 	GLuint VBO;
