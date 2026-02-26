@@ -7,7 +7,8 @@
 #include "arena.h"
 #include "types.h"
 #include "dynarr.h"
-#include "cglm/cglm.h"
+#include "gmath.h"
+//#include "cglm/cglm.h"
 
 typedef struct {
 	GLuint VBO;
@@ -31,11 +32,19 @@ ARRAY_DEFINE(vertArray_t, vertex_t);
 ARRAY_DEFINE(renderObjectArray_t, renderObject_t);
 
 typedef struct {
+	vec3 pos;
+	vec3 direction;
+	mat4 view;
+	mat4 proj;
+} camera_t;
+
+typedef struct {
 	Arena_t arena;
 	renderObjectArray_t objects;
+	camera_t* cam;
 } renderer_t;
 
-void RENDERER_init(renderer_t* r);
+void RENDERER_init(renderer_t* r, camera_t* camera);
 void RENDERER_update(renderer_t* r);
 void RENDERER_render(renderer_t* r, SDL_Window* window);
 void RENDERER_destroy(renderer_t* r);
@@ -48,7 +57,8 @@ void RENDERER_pushObject(renderer_t* r, renderObject_t o);
 void RENDERER_translateObject(renderObject_t* o, float x, float y, float z);
 void RENDERER_rotateObject(renderObject_t* o, float angle, float x, float y, float z);
 
-
 void RENDERER_setUniformMat4(material_t* m, const char* name, mat4 mat);
+
+void RENDERER_cameraLookAt(renderer_t* r, vec3 target);
 
 #endif

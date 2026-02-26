@@ -6,9 +6,19 @@ void InitSDL() {
 	}
 }
 
+void InitSDLGL(int maj, int min) {
+	if(SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+		printf("SDL FAILED TO LOAD\n");
+	}
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, maj);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, min);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+}
+
 
 void InitSDLImage() {
-	if(!IMG_Init(IMG_INIT_PNG || IMG_INIT_JPG)) {
+	if(!IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG)) {
 		printf("SDLIMAGE FAILED TO LOAD\n");
 	}
 }

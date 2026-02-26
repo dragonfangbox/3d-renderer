@@ -1,8 +1,15 @@
 #include "renderer.h"
 
-void RENDERER_init(renderer_t* r) {
+void RENDERER_init(renderer_t* r, camera_t* camera) {
 	Arena_init(&r->arena, MiB);
 	ARRAY_INIT(&r->objects);
+
+	// default position
+	camera->pos[0] = 0;
+	camera->pos[1] = 0;
+	camera->pos[2] = 3;
+
+	r->cam = camera;
 }
 
 void RENDERER_update(renderer_t* r) { 
@@ -14,7 +21,10 @@ void RENDERER_render(renderer_t* r, SDL_Window* window) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	for (u16 i = 0; i < r->objects.size; i++) {
-		glUseProgram(r->objects.data[i].material->shader);
+		renderObject_t obj = r->objects.data[i];
+		glUseProgram(obj.material->shader);
+		RENDERER_setUniformMat4(obj.material, "proj", r->cam->proj);
+		RENDERER_setUniformMat4(obj.material, "view", r->cam->view);
 		glBindVertexArray(r->objects.data[i].VAO);
 		glDrawArrays(GL_TRIANGLES, 0, r->objects.data[i].mesh->vertCount);
 	}
@@ -44,7 +54,7 @@ void RENDERER_initMesh(mesh_t* m, vertArray_t vertices, float* indices) {
 void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat) {
 	o->mesh = mesh;
 	o->material = mat;
-	glm_mat4_identity(o->model);
+	mat4_identity(o->model);
 
 	glGenVertexArrays(1, &o->VAO);
 	glBindVertexArray(o->VAO);
@@ -62,13 +72,13 @@ void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat)
 
 void RENDERER_translateObject(renderObject_t* o, float x, float y, float z) {
 	vec3 v = {x, y, z};
-	glm_translate(o->model, v);
+	mat4_translate(o->model, v);
 }
 
 void RENDERER_rotateObject(renderObject_t* o, float angle, float x, float y, float z) {
-	vec3 v = {x, y, z};
+	//vec3 v = {x, y, z};
 	
-	glm_rotate(o->model, glm_rad(angle), v);
+	//glm_rotate(o->model, glm_rad(angle), v);
 }
 
 void RENDERER_pushObject(renderer_t* r, renderObject_t o) {
@@ -81,7 +91,11 @@ void RENDERER_initMaterial(material_t* m, GLuint program) {
 
 void RENDERER_setUniformMat4(material_t* m, const char* name, mat4 mat) {
 	GLuint location = glGetUniformLocation(m->shader, name);
-	glUniformMatrix4fv(location, 1, GL_FALSE, (float*)mat);
+	glUniformMatrix4fv(location, 1, GL_TRUE, (float*)mat);
+}
+
+void RENDERER_cameraLookAt(renderer_t* r, vec3 target) {
+
 }
 
 void RENDERER_destroy(renderer_t* r) {

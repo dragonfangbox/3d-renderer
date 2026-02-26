@@ -5,6 +5,7 @@
 #include <SDL2/SDL_image.h>
 
 void InitSDL(); 
+void InitSDLGL(int maj, int min);
 void InitSDLImage(); 
 
 SDL_Window* InitWindowOPENGL(char* name, int w, int h); 

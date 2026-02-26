@@ -7,12 +7,7 @@
 #include "shader.h"
 
 int main() {
-	
-	InitSDL();
-
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	InitSDLGL(3, 3);
 
 	SDL_Window* window = InitWindowOPENGL("renderer test", 1280, 720);
 	SDL_ShowWindow(window);
@@ -50,7 +45,8 @@ int main() {
 	glDeleteShader(fragShader);
 
 	renderer_t renderer;
-	RENDERER_init(&renderer);
+	camera_t cam = {.direction = {0}, .pos = {0}};
+	RENDERER_init(&renderer, &cam);
 
 	renderObject_t testObj;
 	mesh_t triangleMesh;
@@ -67,16 +63,12 @@ int main() {
 
 	RENDERER_initRenderObject(&testObj, &triangleMesh, &defaultMaterial);
 
-	RENDERER_translateObject(&testObj, 0.2, 0.5, 0.4);
+	RENDERER_translateObject(&testObj, 0.5, 0.5, 0);
 
 	RENDERER_pushObject(&renderer, testObj);
 
-	u64 lastTime = 0;
 	bool running = TRUE;
 	while(running) {
-		u64 currentTime = SDL_GetTicks64();
-		
-
 		SDL_Event event;
 		while((SDL_PollEvent(&event))) {
 			if (event.type == SDL_QUIT) {
@@ -89,8 +81,6 @@ int main() {
 		RENDERER_rotateObject(&testObj, 1, 0, 0, 1);
 		RENDERER_setUniformMat4(&defaultMaterial, "model", testObj.model);
 		RENDERER_render(&renderer, window);
-
-		lastTime = currentTime;
 	}
 
 	RENDERER_destroy(&renderer);
