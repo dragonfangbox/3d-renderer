@@ -99,6 +99,7 @@ void mat4_rotateX(mat4 m, float a) {
 
 	mat4_multmat4(m, r, m);
 }
+
 void mat4_rotateY(mat4 m, float a) {
 	mat4 r;
 	mat4_identity(r);
@@ -110,6 +111,7 @@ void mat4_rotateY(mat4 m, float a) {
 
 	mat4_multmat4(m, r, m);
 }
+
 void mat4_rotateZ(mat4 m, float a) {
 	mat4 r;
 	mat4_identity(r);
@@ -120,4 +122,23 @@ void mat4_rotateZ(mat4 m, float a) {
 	r[1][1] = cos(a);
 
 	mat4_multmat4(m, r, m);
+}
+
+void mat4_perspective(mat4 m, float near, 
+					  float far, float fov, 
+					  float aspect) 
+{
+	mat4 p = {0};
+	
+	p[0][0] = 1/(tan(fov/2) * aspect);
+	p[1][1] = 1/(tan(fov/2));
+	p[2][2] = (far+near)/(near-far);
+	p[2][3] = (2 * far * near)/(near-far);
+	p[3][2] = -1;
+
+	mat4_multmat4(m, p, m);
+}
+
+float degToRad(float d) {
+	return (d) * (PI / 180);
 }

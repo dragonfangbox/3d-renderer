@@ -21,5 +21,8 @@ void mat4_scale(mat4 m, vec3 s);
 void mat4_rotateX(mat4 m, float a);
 void mat4_rotateY(mat4 m, float a);
 void mat4_rotateZ(mat4 m, float a);
+void mat4_perspective(mat4 m, float near, float far, float fov, float aspect);
+
+float degToRad(float d);
 
 #endif

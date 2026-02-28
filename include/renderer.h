@@ -31,8 +31,6 @@ ARRAY_DEFINE(vertArray_t, vertex_t);
 ARRAY_DEFINE(renderObjectArray_t, renderObject_t);
 
 typedef struct {
-	vec3 pos;
-	vec3 direction;
 	mat4 view;
 	mat4 proj;
 } camera_t;
@@ -54,7 +52,8 @@ void RENDERER_initMaterial(material_t* m, GLuint program);
 
 void RENDERER_pushObject(renderer_t* r, renderObject_t o);
 void RENDERER_translateObject(renderObject_t* o, float x, float y, float z);
-void RENDERER_rotateObject(renderObject_t* o, float angle, float x, float y, float z);
+void RENDERER_rotateObjectY(renderObject_t* o, float angle);
+void RENDERER_rotateObjectX(renderObject_t* o, float angle);
 
 void RENDERER_setUniformMat4(material_t* m, const char* name, mat4 mat);
 

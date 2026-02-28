@@ -4,11 +4,6 @@ void RENDERER_init(renderer_t* r, camera_t* camera) {
 	Arena_init(&r->arena, MiB);
 	ARRAY_INIT(&r->objects);
 
-	// default position
-	camera->pos[0] = 0;
-	camera->pos[1] = 0;
-	camera->pos[2] = 3;
-
 	r->cam = camera;
 }
 
@@ -33,7 +28,7 @@ void RENDERER_render(renderer_t* r, SDL_Window* window) {
 }
 
 void RENDERER_initMesh(mesh_t* m, vertArray_t vertices, float* indices) {
-	m->vertCount= vertices.size;
+	m->vertCount = vertices.size;
 	
 	glGenBuffers(1, &m->VBO);
 
@@ -75,10 +70,12 @@ void RENDERER_translateObject(renderObject_t* o, float x, float y, float z) {
 	mat4_translate(o->model, v);
 }
 
-void RENDERER_rotateObject(renderObject_t* o, float angle, float x, float y, float z) {
-	//vec3 v = {x, y, z};
-	
-	//glm_rotate(o->model, glm_rad(angle), v);
+void RENDERER_rotateObjectY(renderObject_t* o, float angle) {
+	mat4_rotateY(o->model, angle);
+}
+
+void RENDERER_rotateObjectX(renderObject_t* o, float angle) {
+	mat4_rotateX(o->model, angle);
 }
 
 void RENDERER_pushObject(renderer_t* r, renderObject_t o) {
@@ -92,10 +89,6 @@ void RENDERER_initMaterial(material_t* m, GLuint program) {
 void RENDERER_setUniformMat4(material_t* m, const char* name, mat4 mat) {
 	GLuint location = glGetUniformLocation(m->shader, name);
 	glUniformMatrix4fv(location, 1, GL_TRUE, (float*)mat);
-}
-
-void RENDERER_cameraLookAt(renderer_t* r, vec3 target) {
-
 }
 
 void RENDERER_destroy(renderer_t* r) {

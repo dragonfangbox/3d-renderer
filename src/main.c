@@ -45,7 +45,11 @@ int main() {
 	glDeleteShader(fragShader);
 
 	renderer_t renderer;
-	camera_t cam = {.direction = {0}, .pos = {0}};
+	camera_t cam = {0};
+	mat4_identity(cam.proj);
+	mat4_identity(cam.view);
+	mat4_perspective(cam.proj, 0, 1, PI/2.0, 1280.0/720.0);
+	mat4_translate(cam.view, (vec3){0, 0, -3});
 	RENDERER_init(&renderer, &cam);
 
 	renderObject_t testObj;
@@ -59,11 +63,62 @@ int main() {
 	ARRAY_APPEND(&triangleVertices, ((vertex_t){{-0.5, -1, 0}, {0, 0, 1}}));
 	RENDERER_initMesh(&triangleMesh, triangleVertices, NULL);
 
+	mesh_t cube;
+	vertArray_t cubeVertices;
+	ARRAY_INIT(&cubeVertices);
+	// BACK (-Z)
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1,-1,-1}, {1,0,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1,-1,-1}, {0,1,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1, 1,-1}, {0,0,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1, 1,-1}, {0,0,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1, 1,-1}, {1,1,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1,-1,-1}, {1,0,0}}));
+
+	// FRONT (+Z)
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1,-1, 1}, {1,0,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1,-1, 1}, {0,1,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1, 1, 1}, {0.5f,0,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1, 1, 1}, {0.5f,0,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1, 1, 1}, {1,0.5f,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1,-1, 1}, {1,0,1}}));
+
+	// LEFT (-X)
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1, 1, 1}, {1,0.5f,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1, 1,-1}, {1,1,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1,-1,-1}, {1,0,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1,-1,-1}, {1,0,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1,-1, 1}, {1,0,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1, 1, 1}, {1,0.5f,0}}));
+
+	// RIGHT (+X)
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1, 1, 1}, {0.5f,0,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1, 1,-1}, {0,0,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1,-1,-1}, {0,1,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1,-1,-1}, {0,1,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1,-1, 1}, {0,1,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1, 1, 1}, {0.5f,0,1}}));
+
+	// BOTTOM (-Y)
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1,-1,-1}, {1,0,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1,-1,-1}, {0,1,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1,-1, 1}, {0,1,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1,-1, 1}, {0,1,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1,-1, 1}, {1,0,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1,-1,-1}, {1,0,0}}));
+
+	// TOP (+Y)
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1, 1,-1}, {1,1,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1, 1,-1}, {0,0,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1, 1, 1}, {0.5f,0,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 1, 1, 1}, {0.5f,0,1}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1, 1, 1}, {1,0.5f,0}}));
+	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-1, 1,-1}, {1,1,0}}));
+	RENDERER_initMesh(&cube, cubeVertices, NULL);
 	RENDERER_initMaterial(&defaultMaterial, program);
 
-	RENDERER_initRenderObject(&testObj, &triangleMesh, &defaultMaterial);
+	RENDERER_initRenderObject(&testObj, &cube, &defaultMaterial);
 
-	RENDERER_translateObject(&testObj, 0.5, 0.5, 0);
+//	RENDERER_translateObject(&testObj, 0.5, 0.5, 0);
 
 	RENDERER_pushObject(&renderer, testObj);
 
@@ -77,9 +132,13 @@ int main() {
 		}
 
 //		RENDERER_update(&renderer);
-
-		RENDERER_rotateObject(&testObj, 1, 0, 0, 1);
+//
+		
+		RENDERER_rotateObjectY(&testObj, degToRad(360));
+		RENDERER_rotateObjectX(&testObj, degToRad(360));
 		RENDERER_setUniformMat4(&defaultMaterial, "model", testObj.model);
+		RENDERER_setUniformMat4(&defaultMaterial, "view", renderer.cam->view);
+		RENDERER_setUniformMat4(&defaultMaterial, "proj", renderer.cam->proj);
 		RENDERER_render(&renderer, window);
 	}
 
