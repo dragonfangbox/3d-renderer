@@ -16,25 +16,45 @@ void RENDERER_render(renderer_t* r, SDL_Window* window) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	for (u16 i = 0; i < r->objects.size; i++) {
-		renderObject_t obj = r->objects.data[i];
-		glUseProgram(obj.material->shader);
-		RENDERER_setUniformMat4(obj.material, "proj", r->cam->proj);
-		RENDERER_setUniformMat4(obj.material, "view", r->cam->view);
-		glBindVertexArray(r->objects.data[i].VAO);
-		glDrawArrays(GL_TRIANGLES, 0, r->objects.data[i].mesh->vertCount);
+		renderObject_t* obj = r->objects.data[i];
+
+		if (obj->mesh->EBO != 0) {
+			glUseProgram(obj->material->shader);
+			
+			RENDERER_setUniformMat4(obj->material, "model", obj->model);
+			RENDERER_setUniformMat4(obj->material, "view", r->cam->view);
+			RENDERER_setUniformMat4(obj->material, "proj", r->cam->proj);
+			glBindVertexArray(r->objects.data[i]->VAO);
+			glDrawElements(GL_TRIANGLES, obj->mesh->indiceCount, GL_UNSIGNED_INT, 0);
+		} else {
+			glUseProgram(obj->material->shader);
+			RENDERER_setUniformMat4(obj->material, "model", obj->model);
+			RENDERER_setUniformMat4(obj->material, "view", r->cam->view);
+			RENDERER_setUniformMat4(obj->material, "proj", r->cam->proj);
+			glBindVertexArray(r->objects.data[i]->VAO);
+			glDrawArrays(GL_TRIANGLES, 0, r->objects.data[i]->mesh->vertCount);
+		}
 	}
 
 	SDL_GL_SwapWindow(window);
 }
 
-void RENDERER_initMesh(mesh_t* m, vertArray_t vertices, float* indices) {
+void RENDERER_initMesh(mesh_t* m, vertArray_t vertices, indiceArray_t indices) {
 	m->vertCount = vertices.size;
+	m->indiceCount = indices.size;
 	
 	glGenBuffers(1, &m->VBO);
 
-	// if(indices != NULL) {
-	//	create an EBO
-	// }
+	if(indices.data != NULL) {
+		glGenBuffers(1, &m->EBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->EBO);
+
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
+					 sizeof(int) * indices.size,
+					 indices.data,
+					 GL_STATIC_DRAW
+					 );
+	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, m->VBO);
 	glBufferData(GL_ARRAY_BUFFER, 
@@ -43,6 +63,7 @@ void RENDERER_initMesh(mesh_t* m, vertArray_t vertices, float* indices) {
 				 GL_STATIC_DRAW
 				 );
 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -55,6 +76,9 @@ void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat)
 	glBindVertexArray(o->VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->VBO);
+	if (mesh->EBO != 0) {
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->EBO);
+	}
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, pos));
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, color));
@@ -78,7 +102,7 @@ void RENDERER_rotateObjectX(renderObject_t* o, float angle) {
 	mat4_rotateX(o->model, angle);
 }
 
-void RENDERER_pushObject(renderer_t* r, renderObject_t o) {
+void RENDERER_pushObject(renderer_t* r, renderObject_t* o) {
 	ARRAY_APPEND(&r->objects, (o));
 }
 
