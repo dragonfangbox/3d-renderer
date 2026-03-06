@@ -68,11 +68,11 @@ void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat)
 void RENDERER_initMaterial(material_t* m, GLuint program);
 
 void RENDERER_pushObject(renderer_t* r, renderObject_t* o);
+
 void RENDERER_translateObject(renderObject_t* o, vec3 t);
 void RENDERER_rotateObjectX(renderObject_t* o, float angle);
 void RENDERER_rotateObjectY(renderObject_t* o, float angle);
 void RENDERER_rotateObjectZ(renderObject_t* o, float angle);
-
 
 void RENDERER_setUniformMat4(material_t* m, const char* name, mat4 mat);
 
