@@ -3,7 +3,7 @@ CFLAGS := -Wall -std=c11
 DFLAGS := -fsanitize=address -g -O0
 INCLUDES := -Iinclude
 LIBS := `pkg-config --cflags --libs sdl2 SDL2_image` -lGL -ldl -lm
-CFILES := $(wildcard src/*.c ) $(wildcard src/renderer/*.c)
+CFILES := $(shell find src -name '*.c') 
 
 .PHONY: build debug
 
