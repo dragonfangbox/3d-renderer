@@ -1,6 +1,20 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+// change it so the render object buffer gets cleared each frame so the way to render things would be:
+//
+// while(true) { // main render loop
+//	
+//	 
+//	 // edit object here
+//		translate...
+//		rotate...
+//		scale...
+//	
+//	pushrenderobject(&obj);
+//	renderobjects();
+// }
+
 #include <SDL2/SDL.h>
 #include "glad/gl.h"
 
@@ -41,6 +55,7 @@ typedef struct {
 	Arena_t arena;
 	renderObjectArray_t objects;
 	camera_t* cam;
+	vec2 screenSize;
 } renderer_t;
 
 void RENDERER_init(renderer_t* r, camera_t* camera);
@@ -53,12 +68,12 @@ void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat)
 void RENDERER_initMaterial(material_t* m, GLuint program);
 
 void RENDERER_pushObject(renderer_t* r, renderObject_t* o);
-void RENDERER_translateObject(renderObject_t* o, float x, float y, float z);
-void RENDERER_rotateObjectY(renderObject_t* o, float angle);
+void RENDERER_translateObject(renderObject_t* o, vec3 t);
 void RENDERER_rotateObjectX(renderObject_t* o, float angle);
+void RENDERER_rotateObjectY(renderObject_t* o, float angle);
+void RENDERER_rotateObjectZ(renderObject_t* o, float angle);
+
 
 void RENDERER_setUniformMat4(material_t* m, const char* name, mat4 mat);
-
-void RENDERER_cameraLookAt(renderer_t* r, vec3 target);
 
 #endif

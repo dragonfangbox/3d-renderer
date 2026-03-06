@@ -6,6 +6,6 @@
 void SHADER_init(u64 arena_size);
 
 char* SHADER_loadShader(char* file);
-void SHADER_freeArena();
+void SHADER_deinit();
 
 #endif

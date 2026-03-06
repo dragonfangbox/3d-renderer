@@ -5,10 +5,13 @@
 #include "sdl.h"
 #include "shader.h"
 
+#define WIDTH 720.0
+#define HEIGHT 480.0
+
 int main() {
 	InitSDLGL(3, 3);
 
-	SDL_Window* window = InitWindowOPENGL("renderer test", 1280, 720);
+	SDL_Window* window = InitWindowOPENGL("renderer test", WIDTH, HEIGHT);
 	SDL_ShowWindow(window);
 
 	SDL_GLContext glctx = SDL_GL_CreateContext(window);
@@ -21,8 +24,7 @@ int main() {
 
 	printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
 
-	glViewport(0, 0, 1280, 720);
-
+	glViewport(0, 0, WIDTH, HEIGHT);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
@@ -49,9 +51,9 @@ int main() {
 
 	renderer_t renderer;
 	camera_t cam = {0};
-	mat4_identity(cam.proj);
 	mat4_identity(cam.view);
-	mat4_perspective(cam.proj, 0, 1, PI/2.0, 1280.0/720.0);
+	mat4_identity(cam.proj);
+	mat4_perspective(cam.proj, 0, 1, PI/2.0, WIDTH/HEIGHT);
 	mat4_translate(cam.view, (vec3){0, 0, -3});
 	RENDERER_init(&renderer, &cam);
 
@@ -77,7 +79,7 @@ int main() {
 	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 0.5f,-0.5f, 0.5f},{0.0f,1.0f,1.0f}})); // 5
 	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 0.5f, 0.5f, 0.5f},{1.0f,0.5f,0.0f}})); // 6
 	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-0.5f, 0.5f, 0.5f},{0.5f,0.0f,1.0f}})); // 7
-																					 //
+																					 
 	indiceArray_t cubeIndices;
 	ARRAY_INIT(&cubeIndices);
 	// Front (-Z)
@@ -139,25 +141,56 @@ int main() {
 
 	RENDERER_initRenderObject(&testObj, &cube, &defaultMaterial);
 
-	RENDERER_translateObject(&testObj, 0.5, 0.5, 0);
+	RENDERER_translateObject(&testObj, (vec3){0, 0.5, 0.5});
 
 	RENDERER_pushObject(&renderer, &testObj);
 
-	float angle = 0;
 	bool running = TRUE;
 	while(running) {
 		SDL_Event event;
 		while((SDL_PollEvent(&event))) {
 			if (event.type == SDL_QUIT) {
 				running = FALSE;
+			} else if (event.key.type == SDL_KEYDOWN) {
+				switch (event.key.keysym.scancode) {
+				case SDL_SCANCODE_W:
+					mat4_translate(renderer.cam->view, (vec3){0, 0, 0.5});
+					break;
+				case SDL_SCANCODE_A:
+					mat4_translate(renderer.cam->view, (vec3){0.5, 0, 0});
+					break;
+				case SDL_SCANCODE_S:
+					mat4_translate(renderer.cam->view, (vec3){0, 0, -0.5});
+					break;
+				case SDL_SCANCODE_D:
+					mat4_translate(renderer.cam->view, (vec3){-0.5, 0, 0});
+					break;
+				case SDL_SCANCODE_E:
+					mat4_translate(renderer.cam->view, (vec3){0, -0.5, 0});
+					break;
+				case SDL_SCANCODE_Q:
+					mat4_translate(renderer.cam->view, (vec3){0, 0.5, 0});
+					break;
+				default:
+					break;
+				}
+			} else if (event.type == SDL_WINDOWEVENT && 
+					   event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+				
+				int w, h;
+				SDL_GL_GetDrawableSize(window, &w, &h);
+
+				renderer.screenSize[0] = w;
+				renderer.screenSize[1] = h;
+
+				mat4_identity(renderer.cam->proj);
+				mat4_perspective(renderer.cam->proj, 0, 1, PI/2.0, (float)w/h);
+				
+				glViewport(0, 0, w, h);	
 			}
 		}
 
-		RENDERER_rotateObjectY(&testObj, degToRad(angle / 360));
-		RENDERER_rotateObjectX(&testObj, degToRad(angle / 360));
 		RENDERER_render(&renderer, window);
-
-		angle += 1;
 	}
 
 	RENDERER_destroy(&renderer);

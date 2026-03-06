@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "shader.h"
 
 void RENDERER_init(renderer_t* r, camera_t* camera) {
 	Arena_init(&r->arena, MiB);
@@ -45,7 +46,7 @@ void RENDERER_initMesh(mesh_t* m, vertArray_t vertices, indiceArray_t indices) {
 	
 	glGenBuffers(1, &m->VBO);
 
-	if(indices.data != NULL) {
+	if (indices.data != NULL) {
 		glGenBuffers(1, &m->EBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->EBO);
 
@@ -89,17 +90,20 @@ void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat)
 	glBindVertexArray(0);
 }
 
-void RENDERER_translateObject(renderObject_t* o, float x, float y, float z) {
-	vec3 v = {x, y, z};
-	mat4_translate(o->model, v);
+void RENDERER_translateObject(renderObject_t* o, vec3 t) {
+	mat4_translate(o->model, t);
+}
+
+void RENDERER_rotateObjectX(renderObject_t* o, float angle) {
+	mat4_rotateX(o->model, angle);
 }
 
 void RENDERER_rotateObjectY(renderObject_t* o, float angle) {
 	mat4_rotateY(o->model, angle);
 }
 
-void RENDERER_rotateObjectX(renderObject_t* o, float angle) {
-	mat4_rotateX(o->model, angle);
+void RENDERER_rotateObjectZ(renderObject_t* o, float angle) {
+	mat4_rotateZ(o->model, angle);
 }
 
 void RENDERER_pushObject(renderer_t* r, renderObject_t* o) {

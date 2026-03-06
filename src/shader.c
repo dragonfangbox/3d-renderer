@@ -24,6 +24,6 @@ char* SHADER_loadShader(char* file) {
 	return data;
 }
 
-void SHADER_freeArena() {
+void SHADER_deinit() {
 	Arena_free(&arena);
 }
