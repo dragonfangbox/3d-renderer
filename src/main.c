@@ -1,7 +1,7 @@
 #define ARENA_IMPLEMENTATION
 #include "arena.h"
 #include "types.h"
-#include "renderer.h"
+#include "renderer/common.h"
 #include "sdl.h"
 #include "shader.h"
 

@@ -11,7 +11,7 @@ build:
 	$(CC) $(CFLAGS) $(INCLUDES) $(CFILES) -o main.out $(LIBS)
 
 debug:
-	$(CC) $(CLFAGS) $(DFLAGS) $(INCLUDES) $(CFILES) -o main.out $(LIBS)
+	$(CC) $(CFLAGS) $(DFLAGS) $(INCLUDES) $(CFILES) -o main.out $(LIBS)
 
 
 

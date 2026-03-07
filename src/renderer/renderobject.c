@@ -1,32 +1,4 @@
-#include "renderer.h"
-
-void RENDERER_initMesh(mesh_t* m, vertArray_t vertices, indiceArray_t indices) {
-	m->vertCount = vertices.size;
-	m->indiceCount = indices.size;
-	
-	glGenBuffers(1, &m->VBO);
-
-	if (indices.data != NULL) {
-		glGenBuffers(1, &m->EBO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->EBO);
-
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
-					 sizeof(int) * indices.size,
-					 indices.data,
-					 GL_STATIC_DRAW
-					 );
-	}
-
-	glBindBuffer(GL_ARRAY_BUFFER, m->VBO);
-	glBufferData(GL_ARRAY_BUFFER, 
-				 sizeof(vertex_t) * vertices.size, 
-				 vertices.data,
-				 GL_STATIC_DRAW
-				 );
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
+#include "renderer/renderobject.h"
 
 void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat) {
 	o->mesh = mesh;
@@ -48,10 +20,6 @@ void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat)
 	glEnableVertexAttribArray(1);
 
 	glBindVertexArray(0);
-}
-
-void RENDERER_initMaterial(material_t* m, GLuint program) {
-	m->shader = program;
 }
 
 void RENDERER_pushObject(renderer_t* r, renderObject_t* o) {

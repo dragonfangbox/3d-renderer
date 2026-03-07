@@ -1,4 +1,7 @@
-#include "renderer.h"
+#include "renderer/renderer.h"
+#include "renderer/shader.h"
+
+#include "glad/gl.h"
 
 void RENDERER_init(renderer_t* r, camera_t* camera) {
 	Arena_init(&r->arena, MiB);

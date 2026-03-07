@@ -1,4 +1,4 @@
-#include "renderer.h"
+#include "renderer/transform.h"
 
 void RENDERER_translateObject(renderObject_t* o, vec3 t) {
 	mat4_translate(o->model, t);
