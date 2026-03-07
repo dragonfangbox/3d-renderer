@@ -1,9 +1,8 @@
 #define ARENA_IMPLEMENTATION
 #include "arena.h"
 #include "types.h"
-#include "renderer/common.h"
+#include "renderer/all.h"
 #include "sdl.h"
-#include "shader.h"
 
 #define WIDTH 720.0
 #define HEIGHT 480.0
