@@ -6,9 +6,13 @@
     * still need to do the texture part
 
 [ ] OBJ file parser
+    * return vertice and indice arrays
 
-[ ] OBJ file output to mesh struct
+[ ] Take OBJ file output into mesh struct
+    * turn vertice and indice arrays into a mesh
 
 [ ] clean up the api and make it nice to use
     * hide all sdl function calls
     * create new functions to abstract opengl functions
+
+[ ] capture mouse movement input to be able to "look around"

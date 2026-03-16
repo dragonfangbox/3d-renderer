@@ -3,6 +3,7 @@
 #include "types.h"
 #include "sdl.h"
 #include "renderer/all.h"
+#include "obj-parser.h"
 
 #define WIDTH 720.0
 #define HEIGHT 480.0
@@ -143,6 +144,8 @@ int main() {
 	RENDERER_translateObject(&testObj, (vec3){0, 0.5, 0.5});
 
 	RENDERER_pushObject(&renderer, &testObj);
+
+	OBJ_parseFile("./test.obj", NULL, NULL);
 
 	bool running = TRUE;
 	while(running) {
