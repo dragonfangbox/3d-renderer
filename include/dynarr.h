@@ -26,7 +26,6 @@
 		\
 		(ARR)->data = newData;\
 	}\
-	\
 	(ARR)->data[(ARR)->size] = (x);\
 	(ARR)->size++;\
 } while(0)

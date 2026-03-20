@@ -10,11 +10,20 @@
 
 typedef unsigned int GLuint;
 
+ARRAY_DEFINE(floatArray_t, float);
+ARRAY_DEFINE(indiceArray_t, int);
+
+typedef struct {
+	vec3 pos;
+	vec4 color;
+} vertex_t;
+ARRAY_DEFINE(vertArray_t, vertex_t);
+
 typedef struct {
 	GLuint VBO;
 	GLuint EBO;
-	unsigned int vertCount;
-	unsigned int indiceCount;	
+	vertArray_t vertices;
+	indiceArray_t indices;
 } mesh_t;
 
 typedef struct {
@@ -28,10 +37,7 @@ typedef struct {
 	GLuint VAO;
 	mat4 model;
 } renderObject_t;
-
 ARRAY_DEFINE(renderObjectArray_t, renderObject_t*);
-ARRAY_DEFINE(vertArray_t, vertex_t);
-ARRAY_DEFINE(indiceArray_t, int);
 
 typedef struct {
 	mat4 view;

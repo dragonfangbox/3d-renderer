@@ -4,6 +4,6 @@
 #include "types.h"
 #include "glad/gl.h"
 
-void RENDERER_initMesh(mesh_t* m, vertArray_t vertices, indiceArray_t indices);
+void RENDERER_initMesh(mesh_t* m);
 
 #endif

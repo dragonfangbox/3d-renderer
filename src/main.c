@@ -58,85 +58,83 @@ int main() {
 	RENDERER_init(&renderer, &cam);
 
 	renderObject_t testObj;
-	mesh_t triangleMesh;
-	material_t defaultMaterial;
 
-	vertArray_t triangleVertices;
-	ARRAY_INIT(&triangleVertices);
-	ARRAY_APPEND(&triangleVertices, ((vertex_t){{0.5, -1, 0}, {1, 0, 0}}));
-	ARRAY_APPEND(&triangleVertices, ((vertex_t){{0, 0.5, 0}, {0, 1, 0}}));
-	ARRAY_APPEND(&triangleVertices, ((vertex_t){{-0.5, -1, 0}, {0, 0, 1}}));
-	RENDERER_initMesh(&triangleMesh, triangleVertices, (indiceArray_t){});
+	mesh_t triangleMesh;
+
+	ARRAY_INIT(&triangleMesh.vertices);
+	ARRAY_APPEND(&triangleMesh.vertices, ((vertex_t){{0.5, -1, 0}, {1, 0, 0}}));
+	ARRAY_APPEND(&triangleMesh.vertices, ((vertex_t){{0, 0.5, 0}, {0, 1, 0}}));
+	ARRAY_APPEND(&triangleMesh.vertices, ((vertex_t){{-0.5, -1, 0}, {0, 0, 1}}));
+	RENDERER_initMesh(&triangleMesh);
 
 	mesh_t cube;
-	vertArray_t cubeVertices;
-	ARRAY_INIT(&cubeVertices);
-	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-0.5f,-0.5f,-0.5f},{1.0f,0.0f,0.0f}})); // 0
-	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 0.5f,-0.5f,-0.5f},{0.0f,1.0f,0.0f}})); // 1
-	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 0.5f, 0.5f,-0.5f},{0.0f,0.0f,1.0f}})); // 2
-	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-0.5f, 0.5f,-0.5f},{1.0f,1.0f,0.0f}})); // 3
-	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-0.5f,-0.5f, 0.5f},{1.0f,0.0f,1.0f}})); // 4
-	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 0.5f,-0.5f, 0.5f},{0.0f,1.0f,1.0f}})); // 5
-	ARRAY_APPEND(&cubeVertices, ((vertex_t){{ 0.5f, 0.5f, 0.5f},{1.0f,0.5f,0.0f}})); // 6
-	ARRAY_APPEND(&cubeVertices, ((vertex_t){{-0.5f, 0.5f, 0.5f},{0.5f,0.0f,1.0f}})); // 7
+	ARRAY_INIT(&cube.vertices);
+	ARRAY_APPEND(&cube.vertices, ((vertex_t){{-0.5f,-0.5f,-0.5f},{1.0f,0.0f,0.0f}})); // 0
+	ARRAY_APPEND(&cube.vertices, ((vertex_t){{ 0.5f,-0.5f,-0.5f},{0.0f,1.0f,0.0f}})); // 1
+	ARRAY_APPEND(&cube.vertices, ((vertex_t){{ 0.5f, 0.5f,-0.5f},{0.0f,0.0f,1.0f}})); // 2
+	ARRAY_APPEND(&cube.vertices, ((vertex_t){{-0.5f, 0.5f,-0.5f},{1.0f,1.0f,0.0f}})); // 3
+	ARRAY_APPEND(&cube.vertices, ((vertex_t){{-0.5f,-0.5f, 0.5f},{1.0f,0.0f,1.0f}})); // 4
+	ARRAY_APPEND(&cube.vertices, ((vertex_t){{ 0.5f,-0.5f, 0.5f},{0.0f,1.0f,1.0f}})); // 5
+	ARRAY_APPEND(&cube.vertices, ((vertex_t){{ 0.5f, 0.5f, 0.5f},{1.0f,0.5f,0.0f}})); // 6
+	ARRAY_APPEND(&cube.vertices, ((vertex_t){{-0.5f, 0.5f, 0.5f},{0.5f,0.0f,1.0f}})); // 7
 																					 
-	indiceArray_t cubeIndices;
-	ARRAY_INIT(&cubeIndices);
+	ARRAY_INIT(&cube.indices);
 	// Front (-Z)
-	ARRAY_APPEND(&cubeIndices, 0);
-	ARRAY_APPEND(&cubeIndices, 1);
-	ARRAY_APPEND(&cubeIndices, 2);
+	ARRAY_APPEND(&cube.indices, 0);
+	ARRAY_APPEND(&cube.indices, 1);
+	ARRAY_APPEND(&cube.indices, 2);
 
-	ARRAY_APPEND(&cubeIndices, 2);
-	ARRAY_APPEND(&cubeIndices, 3);
-	ARRAY_APPEND(&cubeIndices, 0);
+	ARRAY_APPEND(&cube.indices, 2);
+	ARRAY_APPEND(&cube.indices, 3);
+	ARRAY_APPEND(&cube.indices, 0);
 
 	// Back (+Z)
-	ARRAY_APPEND(&cubeIndices, 4);
-	ARRAY_APPEND(&cubeIndices, 6);
-	ARRAY_APPEND(&cubeIndices, 5);
+	ARRAY_APPEND(&cube.indices, 4);
+	ARRAY_APPEND(&cube.indices, 6);
+	ARRAY_APPEND(&cube.indices, 5);
 
-	ARRAY_APPEND(&cubeIndices, 6);
-	ARRAY_APPEND(&cubeIndices, 4);
-	ARRAY_APPEND(&cubeIndices, 7);
+	ARRAY_APPEND(&cube.indices, 6);
+	ARRAY_APPEND(&cube.indices, 4);
+	ARRAY_APPEND(&cube.indices, 7);
 
 	// Left (-X)
-	ARRAY_APPEND(&cubeIndices, 4);
-	ARRAY_APPEND(&cubeIndices, 0);
-	ARRAY_APPEND(&cubeIndices, 3);
+	ARRAY_APPEND(&cube.indices, 4);
+	ARRAY_APPEND(&cube.indices, 0);
+	ARRAY_APPEND(&cube.indices, 3);
 
-	ARRAY_APPEND(&cubeIndices, 3);
-	ARRAY_APPEND(&cubeIndices, 7);
-	ARRAY_APPEND(&cubeIndices, 4);
+	ARRAY_APPEND(&cube.indices, 3);
+	ARRAY_APPEND(&cube.indices, 7);
+	ARRAY_APPEND(&cube.indices, 4);
 
 	// Right (+X)
-	ARRAY_APPEND(&cubeIndices, 1);
-	ARRAY_APPEND(&cubeIndices, 5);
-	ARRAY_APPEND(&cubeIndices, 6);
+	ARRAY_APPEND(&cube.indices, 1);
+	ARRAY_APPEND(&cube.indices, 5);
+	ARRAY_APPEND(&cube.indices, 6);
 
-	ARRAY_APPEND(&cubeIndices, 6);
-	ARRAY_APPEND(&cubeIndices, 2);
-	ARRAY_APPEND(&cubeIndices, 1);
+	ARRAY_APPEND(&cube.indices, 6);
+	ARRAY_APPEND(&cube.indices, 2);
+	ARRAY_APPEND(&cube.indices, 1);
 
 	// Bottom (-Y)
-	ARRAY_APPEND(&cubeIndices, 4);
-	ARRAY_APPEND(&cubeIndices, 5);
-	ARRAY_APPEND(&cubeIndices, 1);
+	ARRAY_APPEND(&cube.indices, 4);
+	ARRAY_APPEND(&cube.indices, 5);
+	ARRAY_APPEND(&cube.indices, 1);
 
-	ARRAY_APPEND(&cubeIndices, 1);
-	ARRAY_APPEND(&cubeIndices, 0);
-	ARRAY_APPEND(&cubeIndices, 4);
+	ARRAY_APPEND(&cube.indices, 1);
+	ARRAY_APPEND(&cube.indices, 0);
+	ARRAY_APPEND(&cube.indices, 4);
 
 	// Top (+Y)
-	ARRAY_APPEND(&cubeIndices, 3);
-	ARRAY_APPEND(&cubeIndices, 2);
-	ARRAY_APPEND(&cubeIndices, 6);
+	ARRAY_APPEND(&cube.indices, 3);
+	ARRAY_APPEND(&cube.indices, 2);
+	ARRAY_APPEND(&cube.indices, 6);
 
-	ARRAY_APPEND(&cubeIndices, 6);
-	ARRAY_APPEND(&cubeIndices, 7);
-	ARRAY_APPEND(&cubeIndices, 3);
+	ARRAY_APPEND(&cube.indices, 6);
+	ARRAY_APPEND(&cube.indices, 7);
+	ARRAY_APPEND(&cube.indices, 3);
 
-	RENDERER_initMesh(&cube, cubeVertices, cubeIndices);
+	RENDERER_initMesh(&cube);
+	material_t defaultMaterial;
 	RENDERER_initMaterial(&defaultMaterial, program);
 
 	RENDERER_initRenderObject(&testObj, &cube, &defaultMaterial);
@@ -145,7 +143,7 @@ int main() {
 
 	RENDERER_pushObject(&renderer, &testObj);
 
-	OBJ_parseFile("./test.obj", NULL, NULL);
+	mesh_t objTest = OBJ_parseFile("./test.obj");
 
 	bool running = TRUE;
 	while(running) {
