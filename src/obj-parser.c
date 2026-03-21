@@ -3,8 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "dynarr.h"
+#include <math.h>
 
-static void getVertices(char* line, floatArray_t* positions) {
+static void getVertices(char* line, floatArray_t* vbuf) {
 	unsigned int count = 0;
 	char* tok = strtok(line, " ");
 	while (tok != NULL) {
@@ -19,28 +20,66 @@ static void getVertices(char* line, floatArray_t* positions) {
 			return;
 		}
 		
-		ARRAY_APPEND(positions, num);
+		ARRAY_APPEND(vbuf, num);
 
 		tok = strtok(NULL, " ");
 		count++;
 	}
-
-	
 }
 
-// i think the best strat here is to have an array for each thing
-// so i would have a vertex array, and indice array and an array for
-// anything else. then when i find a line that starts with f, which has
-// the format v/vt/vn, i would then reference the corresponding array.
-// so if the face has v1/vt3/vn2, i would do vertarray[0]/texturecoordarray[2]/normalarray[1].
+// i dont think i need to pass vnbuf and vtbuf but idk (look above "face" variable)
+static void getFace(char* line, indiceArray_t* fbuf, floatArray_t* vnbuf, floatArray_t* vtbuf) {
+	char* outPtr = NULL;
+	char* inPtr = NULL;
+
+	// i think i should make the face a vec4 of vec3s where each vec3 defines a vertex (v/vt/vn)
+	vec4 face = {0};
+	unsigned int otherCount = 0;
+
+	char* outTok = strtok_r(line, " ", &outPtr);
+	while (outTok != NULL) {
+		unsigned int count = 0;
+
+		char* inTok = strtok_r(outTok, "/", &inPtr);
+		while (inTok != NULL) {
+			// tacky fix to avoid messing with vn and vt, add support for those in here 
+			//
+			if (count == 0) {
+				printf("count: %d\n", otherCount);
+				face[otherCount] = strtof(inTok, NULL);
+			}
+			
+			inTok = strtok_r(NULL, "/", &inPtr);
+			count++;
+		}
+
+		otherCount++;
+		outTok = strtok_r(NULL, " ", &outPtr);
+	}
+
+	// right now this assumes each face is 4 vertices. this WILL break if a face is a single triangle
+	ARRAY_APPEND(fbuf, face[0] - 1);
+	ARRAY_APPEND(fbuf, face[1] - 1);
+	ARRAY_APPEND(fbuf, face[2] - 1);
+
+	ARRAY_APPEND(fbuf, face[0] - 1);
+	ARRAY_APPEND(fbuf, face[2] - 1);
+	ARRAY_APPEND(fbuf, face[3] - 1);
+}
+
 mesh_t OBJ_parseFile(const char* path) {
 	// every group of 3 indices of this array is a vec3
-	floatArray_t positions;
-	ARRAY_INIT(&positions);
-	indiceArray_t indices;
-	ARRAY_INIT(&indices);
+	floatArray_t vbuf;
+	indiceArray_t fbuf;
+	floatArray_t vtbuf;
+	floatArray_t vnbuf;
+	ARRAY_INIT(&vbuf);
+	ARRAY_INIT(&fbuf);
+	ARRAY_INIT(&vtbuf);
+	ARRAY_INIT(&vnbuf);
 
 	mesh_t mesh = {0};
+	ARRAY_INIT(&mesh.vertices);
 
 	FILE* f = fopen(path, "r");
 	if(f == NULL) {
@@ -55,24 +94,38 @@ mesh_t OBJ_parseFile(const char* path) {
 		strncpy(type, line, len);
 		type[len] = '\0';
 		
-		if (strcmp(type, "v") == 0) {
+		if (line[0] == '#') {
+			continue;
+		} else if (strcmp(type, "v") == 0) {
 			// line now points to the first number after the first space
-			getVertices(line + 2, &positions);
+			getVertices(line + len + 1, &vbuf);
 		} else if (strcmp(type, "f") == 0) {
+			// i think the line "f 1 2 3 4" should get interpreted as 2 different vertices
+			// with positions of,
+			// v1 v2 v3, v1 v3 v4
 
+			getFace(line + len + 1, &fbuf, &vnbuf, &vtbuf);
 		} else if (strcmp(type, "vt") == 0) {
 
 		}
-		
 	}
-
-	printf("positions: { ");
-	for (int i = 0; i < positions.size; i++) {
-		printf("%f ", positions.data[i]);
-	}
-	printf("}\n");
 	
 	fclose(f);
+
+	mesh.indices = fbuf;
+
+	for (int i = 0; i < vbuf.size / 3; i++) {
+		vertex_t v = {0};
+		v.pos[0] = vbuf.data[i * 3];
+		v.pos[1] = vbuf.data[i * 3 + 1];
+		v.pos[2] = vbuf.data[i * 3 + 2];
+		v.color[0] = sin(i);
+		v.color[1] = 0;
+		v.color[2] = sin(i);
+		v.color[3] = 1;
+
+		ARRAY_APPEND(&mesh.vertices, v); 
+	}
 
 	return mesh;
 }

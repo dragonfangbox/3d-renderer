@@ -53,13 +53,16 @@ int main() {
 	camera_t cam = {0};
 	mat4_identity(cam.view);
 	mat4_identity(cam.proj);
-	mat4_perspective(cam.proj, 0, 1, PI/2.0, WIDTH/HEIGHT);
+	mat4_perspective(cam.proj, 0, 1, PI/4.0, WIDTH/HEIGHT);
 	mat4_translate(cam.view, (vec3){0, 0, -3});
 	RENDERER_init(&renderer, &cam);
 
 	renderObject_t testObj;
 
 	mesh_t triangleMesh;
+	mesh_t cube;
+	mesh_t objTest = OBJ_parseFile("./untitled.obj");
+	RENDERER_initMesh(&objTest);
 
 	ARRAY_INIT(&triangleMesh.vertices);
 	ARRAY_APPEND(&triangleMesh.vertices, ((vertex_t){{0.5, -1, 0}, {1, 0, 0}}));
@@ -67,7 +70,6 @@ int main() {
 	ARRAY_APPEND(&triangleMesh.vertices, ((vertex_t){{-0.5, -1, 0}, {0, 0, 1}}));
 	RENDERER_initMesh(&triangleMesh);
 
-	mesh_t cube;
 	ARRAY_INIT(&cube.vertices);
 	ARRAY_APPEND(&cube.vertices, ((vertex_t){{-0.5f,-0.5f,-0.5f},{1.0f,0.0f,0.0f}})); // 0
 	ARRAY_APPEND(&cube.vertices, ((vertex_t){{ 0.5f,-0.5f,-0.5f},{0.0f,1.0f,0.0f}})); // 1
@@ -137,13 +139,12 @@ int main() {
 	material_t defaultMaterial;
 	RENDERER_initMaterial(&defaultMaterial, program);
 
-	RENDERER_initRenderObject(&testObj, &cube, &defaultMaterial);
+	RENDERER_initRenderObject(&testObj, &objTest, &defaultMaterial);
 
-	RENDERER_translateObject(&testObj, (vec3){0, 0.5, 0.5});
+//	RENDERER_translateObject(&testObj, (vec3){0, 0.5, 0.5});
 
 	RENDERER_pushObject(&renderer, &testObj);
 
-	mesh_t objTest = OBJ_parseFile("./test.obj");
 
 	bool running = TRUE;
 	while(running) {
