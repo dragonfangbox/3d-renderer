@@ -29,7 +29,7 @@ void mat4_identity(mat4 m) {
 }
 
 // m1 * m2. dest can be m1 or m2.
-void mat4_multmat4(mat4 m1, mat4 m2, mat4 dest) {
+void mat4_multmat4(const mat4 m1, const mat4 m2, mat4 dest) {
 	float a00 = m1[0][0], a01 = m1[0][1], a02 = m1[0][2], a03 = m1[0][3],
 		  a10 = m1[1][0], a11 = m1[1][1], a12 = m1[1][2], a13 = m1[1][3],
 		  a20 = m1[2][0], a21 = m1[2][1], a22 = m1[2][2], a23 = m1[2][3],
@@ -64,7 +64,7 @@ void mat4_multmat4(mat4 m1, mat4 m2, mat4 dest) {
 
 // m * v. dest can be v.
 // not implemented yet
-void mat4_multvec4(mat4 m, vec4 v, vec4 dest);
+void mat4_multvec4(const mat4 m, const vec4 v, vec4 dest);
 
 void mat4_translate(mat4 m, vec3 t) {
 	mat4 T = {0};
@@ -139,8 +139,35 @@ void mat4_perspective(mat4 m, float near,
 	mat4_multmat4(m, p, m);
 }
 
-void mat4_lookAt(vec3 eye, vec3 at, vec3 up, mat4 dest) {
-	vec3 forward;
+// up should typically be (0, 1, 0)
+void mat4_lookAt(mat4 m, vec3 eye, vec3 center, vec3 up) {
+	vec3 forward, right, trueUp;
+
+	vec3_subvec3(center, eye, forward);
+	vec3_unit(forward);
+
+	vec3_cross(forward, up, right);
+	vec3_unit(right);
+
+	vec3_cross(right, forward, trueUp);
+	vec3_unit(trueUp);
+
+	mat4 l = {0};
+	l[0][0] = right[0];	   l[0][1] = right[1];    l[0][2] = right[2];    l[0][3] = -vec3_dot(right, eye);
+	l[1][0] = trueUp[0];   l[1][1] = trueUp[1];   l[1][2] = trueUp[2];   l[1][3] = -vec3_dot(trueUp, eye);
+	l[2][0] = -forward[0]; l[2][1] = -forward[1]; l[2][2] = -forward[2]; l[2][3] = vec3_dot(forward, eye);
+	l[3][0] = 0;		   l[3][1] = 0;			  l[3][2] = 0;			 l[3][3] = 1;
+
+	mat4_multmat4(m, l, m);
+}
+
+void vec3_cross(const vec3 v1, const vec3 v2, vec3 dest) {
+	float x = v1[1] * v2[2] - v1[2] * v2[1];
+	float y = v1[2] * v2[0] - v1[0] * v2[2];
+	float z = v1[0] * v2[1] - v1[1] * v2[0];
+	dest[0] = x;
+	dest[1] = y;
+	dest[2] = z;
 }
 
 void vec3_subvec3(const vec3 v1, const vec3 v2, vec3 dest) {
@@ -155,20 +182,24 @@ void vec3_addvec3(const vec3 v1, const vec3 v2, vec3 dest) {
 	dest[2] = v1[2] + v2[2];
 }
 
-inline void vec3_unit(const vec3 v, vec3 dest) {
+void vec3_unit(vec3 v) {
 	float mag = vec3_magnitude(v);
 	if (mag == 0) {
-		dest[0] = dest[1] = dest[2] = 0.0f;
+		v[0] = v[1] = v[2] = 0.0f;
 		return;
 	}
 
-	dest[0] = v[0] / mag;
-	dest[1] = v[1] / mag;
-	dest[2] = v[2] / mag;
+	v[0] = v[0] / mag;
+	v[1] = v[1] / mag;
+	v[2] = v[2] / mag;
 }
 
 inline float vec3_magnitude(const vec3 v) {
 	return sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+}
+
+inline float vec3_dot(const vec3 v1, const vec3 v2) {
+	return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
 }
 
 inline float degToRad(float d) {
