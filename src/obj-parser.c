@@ -45,7 +45,6 @@ static void getFace(char* line, indiceArray_t* fbuf, floatArray_t* vnbuf, floatA
 			// tacky fix to avoid messing with vn and vt, add support for those in here 
 			//
 			if (count == 0) {
-				printf("count: %d\n", otherCount);
 				face[otherCount] = strtof(inTok, NULL);
 			}
 			
@@ -119,8 +118,8 @@ mesh_t OBJ_parseFile(const char* path) {
 		v.pos[0] = vbuf.data[i * 3];
 		v.pos[1] = vbuf.data[i * 3 + 1];
 		v.pos[2] = vbuf.data[i * 3 + 2];
-		v.color[0] = sin(i);
-		v.color[1] = 0;
+		v.color[0] = sin(i % 3);
+		v.color[1] = sin(i * 0.3);
 		v.color[2] = sin(i);
 		v.color[3] = 1;
 

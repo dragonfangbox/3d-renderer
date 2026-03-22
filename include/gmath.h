@@ -23,6 +23,12 @@ void mat4_rotateX(mat4 m, float a);
 void mat4_rotateY(mat4 m, float a);
 void mat4_rotateZ(mat4 m, float a);
 void mat4_perspective(mat4 m, float near, float far, float fov, float aspect);
+void mat4_lookAt(vec3 eye, vec3 at, vec3 up, mat4 dest);
+// make a vec3 cross function
+void vec3_subvec3(const vec3 v1, const vec3 v2, vec3 dest);
+void vec3_addvec3(const vec3 v1, const vec3 v2, vec3 dest);
+void vec3_unit(const vec3 v, vec3 dest);
+float vec3_magnitude(const vec3 v);
 
 float degToRad(float d);
 

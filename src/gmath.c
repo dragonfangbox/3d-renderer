@@ -67,7 +67,7 @@ void mat4_multmat4(mat4 m1, mat4 m2, mat4 dest) {
 void mat4_multvec4(mat4 m, vec4 v, vec4 dest);
 
 void mat4_translate(mat4 m, vec3 t) {
-	mat4 T;
+	mat4 T = {0};
 	mat4_identity(T);
 
 	T[0][3] = t[0];
@@ -78,7 +78,7 @@ void mat4_translate(mat4 m, vec3 t) {
 }
 
 void mat4_scale(mat4 m, vec3 s) {
-	mat4 S;
+	mat4 S = {0};
 	mat4_identity(S);
 
 	S[0][0] = s[0];
@@ -89,7 +89,7 @@ void mat4_scale(mat4 m, vec3 s) {
 }
 
 void mat4_rotateX(mat4 m, float a) {
-	mat4 r;
+	mat4 r = {0};
 	mat4_identity(r);
 
 	r[1][1] = cos(a);
@@ -101,7 +101,7 @@ void mat4_rotateX(mat4 m, float a) {
 }
 
 void mat4_rotateY(mat4 m, float a) {
-	mat4 r;
+	mat4 r = {0};
 	mat4_identity(r);
 
 	r[0][0] = cos(a);
@@ -113,7 +113,7 @@ void mat4_rotateY(mat4 m, float a) {
 }
 
 void mat4_rotateZ(mat4 m, float a) {
-	mat4 r;
+	mat4 r = {0};
 	mat4_identity(r);
 
 	r[0][0] = cos(a);
@@ -130,15 +130,47 @@ void mat4_perspective(mat4 m, float near,
 {
 	mat4 p = {0};
 	
-	p[0][0] = 1/(tan(fov/2) * aspect);
-	p[1][1] = 1/(tan(fov/2));
-	p[2][2] = (far+near)/(near-far);
-	p[2][3] = (2 * far * near)/(near-far);
+	p[0][0] = 1 / (tan(fov / 2) * aspect);
+	p[1][1] = 1 / (tan(fov / 2));
+	p[2][2] = (far + near) / (near - far);
+	p[2][3] = (2 * far * near) / (near - far);
 	p[3][2] = -1;
 
 	mat4_multmat4(m, p, m);
 }
 
-float degToRad(float d) {
+void mat4_lookAt(vec3 eye, vec3 at, vec3 up, mat4 dest) {
+	vec3 forward;
+}
+
+void vec3_subvec3(const vec3 v1, const vec3 v2, vec3 dest) {
+	dest[0] = v1[0] - v2[0];
+	dest[1] = v1[1] - v2[1];
+	dest[2] = v1[2] - v2[2];
+}
+
+void vec3_addvec3(const vec3 v1, const vec3 v2, vec3 dest) {
+	dest[0] = v1[0] + v2[0];
+	dest[1] = v1[1] + v2[1];
+	dest[2] = v1[2] + v2[2];
+}
+
+inline void vec3_unit(const vec3 v, vec3 dest) {
+	float mag = vec3_magnitude(v);
+	if (mag == 0) {
+		dest[0] = dest[1] = dest[2] = 0.0f;
+		return;
+	}
+
+	dest[0] = v[0] / mag;
+	dest[1] = v[1] / mag;
+	dest[2] = v[2] / mag;
+}
+
+inline float vec3_magnitude(const vec3 v) {
+	return sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+}
+
+inline float degToRad(float d) {
 	return (d) * (PI / 180);
 }
