@@ -6,7 +6,6 @@
     * still need to do the texture part
 
 [ ] OBJ file parser
-    * return vertice and indice arrays
 
 [x] Take OBJ file output into mesh struct
     * turn vertice and indice arrays into a mesh
@@ -15,5 +14,6 @@
     * hide all sdl function calls
     * create new functions to abstract opengl functions
 
-DO THIS NEXT
+[ ] make things like the camera, window, and other structs easier to make with a "createObject" function. kind of correlates to the task above
+
 [ ] capture mouse movement input to be able to "look around"

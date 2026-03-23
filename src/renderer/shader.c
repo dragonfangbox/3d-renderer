@@ -22,6 +22,28 @@ char* SHADER_loadShader(char* file) {
 	return data;
 }
 
+GLuint SHADER_createProgram(const char* fragsrc,
+							const char* vertsrc) {
+	
+	u16 fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragShader, 1, &fragsrc, NULL);
+	glCompileShader(fragShader);
+
+	u16 vertShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertShader, 1, &vertsrc, NULL);
+	glCompileShader(vertShader);
+
+	u16 program = glCreateProgram();
+	glAttachShader(program, fragShader);
+	glAttachShader(program, vertShader);
+	glLinkProgram(program);
+
+	glDeleteShader(vertShader);
+	glDeleteShader(fragShader);
+
+	return program;
+}
+
 void SHADER_deinit() {
 	Arena_free(&arena);
 }

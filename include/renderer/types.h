@@ -40,15 +40,20 @@ typedef struct {
 ARRAY_DEFINE(renderObjectArray_t, renderObject_t*);
 
 typedef struct {
+	vec3 pos;
 	mat4 view;
 	mat4 proj;
 } camera_t;
 
 typedef struct {
+	vec2 size;
+} window_t;
+
+typedef struct {
 	Arena_t arena;
 	renderObjectArray_t objects;
-	camera_t* cam;
-	vec2 screenSize;
+	camera_t* camera;
+	window_t* window;
 } renderer_t;
 
 #endif

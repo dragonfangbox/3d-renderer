@@ -3,11 +3,12 @@
 
 #include "glad/gl.h"
 
-void RENDERER_init(renderer_t* r, camera_t* camera) {
+void RENDERER_init(renderer_t* r, window_t* window, camera_t* camera) {
 	Arena_init(&r->arena, MiB);
 	ARRAY_INIT(&r->objects);
 
-	r->cam = camera;
+	r->camera = camera;
+	r->window = window;
 }
 
 void RENDERER_update(renderer_t* r) { 
@@ -25,15 +26,15 @@ void RENDERER_render(renderer_t* r, SDL_Window* window) {
 			glUseProgram(obj->material->shader);
 			
 			RENDERER_setUniformMat4(obj->material, "model", obj->model);
-			RENDERER_setUniformMat4(obj->material, "view", r->cam->view);
-			RENDERER_setUniformMat4(obj->material, "proj", r->cam->proj);
+			RENDERER_setUniformMat4(obj->material, "view", r->camera->view);
+			RENDERER_setUniformMat4(obj->material, "proj", r->camera->proj);
 			glBindVertexArray(r->objects.data[i]->VAO);
 			glDrawElements(GL_TRIANGLES, obj->mesh->indices.size, GL_UNSIGNED_INT, 0);
 		} else {
 			glUseProgram(obj->material->shader);
 			RENDERER_setUniformMat4(obj->material, "model", obj->model);
-			RENDERER_setUniformMat4(obj->material, "view", r->cam->view);
-			RENDERER_setUniformMat4(obj->material, "proj", r->cam->proj);
+			RENDERER_setUniformMat4(obj->material, "view", r->camera->view);
+			RENDERER_setUniformMat4(obj->material, "proj", r->camera->proj);
 			glBindVertexArray(r->objects.data[i]->VAO);
 			glDrawArrays(GL_TRIANGLES, 0, r->objects.data[i]->mesh->vertices.size);
 		}
