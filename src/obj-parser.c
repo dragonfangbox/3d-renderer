@@ -43,7 +43,7 @@ static void getFace(char* line, indiceArray_t* fbuf, floatArray_t* vnbuf, floatA
 		char* inTok = strtok_r(outTok, "/", &inPtr);
 		while (inTok != NULL) {
 			// tacky fix to avoid messing with vn and vt, add support for those in here 
-			//
+			// get rid of otherCount this is so janky holy cow
 			if (count == 0) {
 				face[otherCount] = strtof(inTok, NULL);
 			}
@@ -56,22 +56,30 @@ static void getFace(char* line, indiceArray_t* fbuf, floatArray_t* vnbuf, floatA
 		outTok = strtok_r(NULL, " ", &outPtr);
 	}
 
-	// right now this assumes each face is 4 vertices. this WILL break if a face is a single triangle
-	ARRAY_APPEND(fbuf, face[0] - 1);
-	ARRAY_APPEND(fbuf, face[1] - 1);
-	ARRAY_APPEND(fbuf, face[2] - 1);
+	if (otherCount == 4) {
+		ARRAY_APPEND(fbuf, face[0] - 1);
+		ARRAY_APPEND(fbuf, face[1] - 1);
+		ARRAY_APPEND(fbuf, face[2] - 1);
 
-	ARRAY_APPEND(fbuf, face[0] - 1);
-	ARRAY_APPEND(fbuf, face[2] - 1);
-	ARRAY_APPEND(fbuf, face[3] - 1);
+		ARRAY_APPEND(fbuf, face[0] - 1);
+		ARRAY_APPEND(fbuf, face[2] - 1);
+		ARRAY_APPEND(fbuf, face[3] - 1);
+
+	} else if (otherCount == 3) {
+		ARRAY_APPEND(fbuf, face[0] - 1);
+		ARRAY_APPEND(fbuf, face[1] - 1);
+		ARRAY_APPEND(fbuf, face[2] - 1);
+	} else {
+		printf("%s : %d | Unknown amount of vertices in face\n", __FILE_NAME__, __LINE__);	
+	}
 }
 
 mesh_t OBJ_parseFile(const char* path) {
 	// every group of 3 indices of this array is a vec3
-	floatArray_t vbuf;
+	floatArray_t  vbuf;
 	indiceArray_t fbuf;
-	floatArray_t vtbuf;
-	floatArray_t vnbuf;
+	floatArray_t  vtbuf;
+	floatArray_t  vnbuf;
 	ARRAY_INIT(&vbuf);
 	ARRAY_INIT(&fbuf);
 	ARRAY_INIT(&vtbuf);

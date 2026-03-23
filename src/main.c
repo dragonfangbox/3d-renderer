@@ -9,6 +9,17 @@
 #define HEIGHT 480.0
 
 int main() {
+	window_t win = {.size = {720, 480}};
+	camera_t cam = {0};
+
+	mat4_identity(cam.view);
+	mat4_lookAt(cam.view, (vec3){5, 3, 2}, (vec3){0, 0, 0}, (vec3){0, 1, 0});
+	mat4_identity(cam.proj);
+	mat4_perspective(cam.proj, 0, 1, PI/4.0, WIDTH/HEIGHT);
+
+	renderer_t renderer;
+	RENDERER_init(&renderer, &win, &cam);
+
 	InitSDLGL(3, 3);
 
 	SDL_Window* window = InitWindowOPENGL("renderer test", WIDTH, HEIGHT);
@@ -34,20 +45,10 @@ int main() {
 	const char* vertShadersrc = SHADER_loadShader("./src/shaders/vertex-shader.vert");
 	u16 program = SHADER_createProgram(fragShadersrc, vertShadersrc);
 
-	window_t win = {.size = {WIDTH, HEIGHT}};
-	camera_t cam = {0};
-
-	mat4_identity(cam.view);
-	mat4_lookAt(cam.view, (vec3){5, 3, 2}, (vec3){0, 0, 0}, (vec3){0, 1, 0});
-	mat4_identity(cam.proj);
-	mat4_perspective(cam.proj, 0, 1, PI/4.0, WIDTH/HEIGHT);
-
-	renderer_t renderer;
-	RENDERER_init(&renderer, &win, &cam);
 
 	renderObject_t testObj;
 
-	mesh_t objTest = OBJ_parseFile("./untitled.obj");
+	mesh_t objTest = OBJ_parseFile("./cube.obj");
 	RENDERER_initMesh(&objTest);
 
 	material_t defaultMaterial;
@@ -55,7 +56,7 @@ int main() {
 
 	RENDERER_initRenderObject(&testObj, &objTest, &defaultMaterial);
 
-//	RENDERER_translateObject(&testObj, (vec3){0, 0.5, 0.5});
+//	RENDERER_translateObject(&testObj, (vec3){0, 1, 0});
 
 	RENDERER_pushObject(&renderer, &testObj);
 
@@ -93,7 +94,7 @@ int main() {
 				renderer.window->size[1] = h;
 
 				mat4_identity(renderer.camera->proj);
-				mat4_perspective(renderer.camera->proj, 0, 1, PI/2.0, (float)w/h);
+				mat4_perspective(renderer.camera->proj, 0, 1, PI/4.0, (float)w/h);
 				
 				glViewport(0, 0, w, h);	
 			}
