@@ -16,4 +16,6 @@
 
 [ ] make things like the camera, window, and other structs easier to make with a "createObject" function. kind of correlates to the task above
 
-[ ] capture mouse movement input to be able to "look around"
+[x] capture mouse movement input to be able to "look around"
+
+[ ] make it so i can rotate the camera with mouse movement
