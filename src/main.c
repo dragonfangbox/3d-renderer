@@ -1,3 +1,9 @@
+/*
+ *test this out on an actual linux os to test if the mouse capturing works.
+ *its broken because of wsl2 so idk if it actually works.
+ */ 
+
+
 #define ARENA_IMPLEMENTATION
 #include "arena.h"
 #include "types.h"
@@ -21,7 +27,7 @@ int main() {
 	RENDERER_init(&renderer, &win, &cam);
 
 	InitSDLGL(3, 3);
-	SDL_SetRelativeMouseMode(SDL_TRUE);
+//	SDL_SetRelativeMouseMode(SDL_TRUE);
 	
 
 	SDL_Window* window = InitWindowOPENGL("renderer test", WIDTH, HEIGHT);
@@ -86,15 +92,14 @@ int main() {
 					break;
 				}
 			} else if (event.type == SDL_MOUSEMOTION) {
-				int dx = event.motion.xrel;
-				int dy = event.motion.yrel;
+				i32 dx = event.motion.xrel;
+				i32 dy = event.motion.yrel;
 
-				renderer.camera->dir[2] += -dx * 0.1;
-				renderer.camera->dir[1] += -dy * 0.1;
+				renderer.camera->yaw += -dx * 0.01;
+				renderer.camera->pitch += -dy * 0.01;
 
-				printf("dir: %f %f %f\n", renderer.camera->dir[0], renderer.camera->dir[1], renderer.camera->dir[2]);
 				mat4_identity(renderer.camera->view);
-				mat4_lookAt(renderer.camera->view, renderer.camera->pos, renderer.camera->dir, (vec3){0, 1, 0});
+				mat4_lookAt(renderer.camera->view, renderer.camera->pos, (vec3){0, renderer.camera->pitch, renderer.camera->yaw}, (vec3){0, 1, 0});
 			} else if (event.type == SDL_WINDOWEVENT && 
 					   event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
 				

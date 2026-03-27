@@ -41,7 +41,8 @@ ARRAY_DEFINE(renderObjectArray_t, renderObject_t*);
 
 typedef struct {
 	vec3 pos;
-	vec3 dir;
+	int pitch;
+	int yaw;
 	mat4 view;
 	mat4 proj;
 } camera_t;

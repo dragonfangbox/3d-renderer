@@ -18,4 +18,4 @@
 
 [x] capture mouse movement input to be able to "look around"
 
-[ ] make it so i can rotate the camera with mouse movement
+[x] make it so i can rotate the camera with mouse movement
