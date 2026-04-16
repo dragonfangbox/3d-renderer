@@ -4,6 +4,7 @@
 #include "types.h"
 #include "glad/gl.h"
 
+renderObject_t* RENDERER_newRenderObject(mesh_t* mesh, material_t* mat);
 void RENDERER_initRenderObject(renderObject_t* o, mesh_t* mesh, material_t* mat);
 void RENDERER_pushObject(renderer_t* r, renderObject_t* o);
 

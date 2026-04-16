@@ -11,7 +11,7 @@
 typedef unsigned int GLuint;
 
 ARRAY_DEFINE(floatArray_t, float);
-ARRAY_DEFINE(indiceArray_t, int);
+ARRAY_DEFINE(intArray_t, int);
 
 typedef struct {
 	vec3 pos;
@@ -23,7 +23,7 @@ typedef struct {
 	GLuint VBO;
 	GLuint EBO;
 	vertArray_t vertices;
-	indiceArray_t indices;
+	intArray_t indices;
 } mesh_t;
 
 typedef struct {

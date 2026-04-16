@@ -2,6 +2,8 @@
 
 ## TODO
 
+[ ] MOVE VAO TO MESH INSTEAD OF RENDER OBJ
+
 [ ] Add a material struct that owns a shader and texture
     * still need to do the texture part
 
@@ -18,4 +20,4 @@
 
 [x] capture mouse movement input to be able to "look around"
 
-[x] make it so i can rotate the camera with mouse movement
+[ ] make it so i can rotate the camera with mouse movement

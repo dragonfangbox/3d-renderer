@@ -1,5 +1,5 @@
-#ifndef RENDERER_COMMON_H
-#define RENDERER_COMMON_H
+#ifndef RENDERER_ALL_H
+#define RENDERER_ALL_H
 
 #include "renderer/renderer.h"		// IWYU pragma: export
 #include "renderer/material.h"		// IWYU pragma: export

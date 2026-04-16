@@ -28,7 +28,7 @@ static void getVertices(char* line, floatArray_t* vbuf) {
 }
 
 // i dont think i need to pass vnbuf and vtbuf but idk (look above "face" variable)
-static void getFace(char* line, indiceArray_t* fbuf, floatArray_t* vnbuf, floatArray_t* vtbuf) {
+static void getFace(char* line, intArray_t* fbuf, floatArray_t* vnbuf, floatArray_t* vtbuf) {
 	char* outPtr = NULL;
 	char* inPtr = NULL;
 
@@ -74,10 +74,11 @@ static void getFace(char* line, indiceArray_t* fbuf, floatArray_t* vnbuf, floatA
 	}
 }
 
-mesh_t OBJ_parseFile(const char* path) {
+mesh_t* OBJ_parseFile(const char* path) {
 	// every group of 3 indices of this array is a vec3
+	//			   \/
 	floatArray_t  vbuf;
-	indiceArray_t fbuf;
+	intArray_t	  fbuf;
 	floatArray_t  vtbuf;
 	floatArray_t  vnbuf;
 	ARRAY_INIT(&vbuf);
@@ -85,8 +86,8 @@ mesh_t OBJ_parseFile(const char* path) {
 	ARRAY_INIT(&vtbuf);
 	ARRAY_INIT(&vnbuf);
 
-	mesh_t mesh = {0};
-	ARRAY_INIT(&mesh.vertices);
+	mesh_t* mesh = malloc(sizeof(mesh_t)); 
+	ARRAY_INIT(&mesh->vertices);
 
 	FILE* f = fopen(path, "r");
 	if(f == NULL) {
@@ -119,7 +120,9 @@ mesh_t OBJ_parseFile(const char* path) {
 	
 	fclose(f);
 
-	mesh.indices = fbuf;
+	// this section down here is not correct for a full obj parser
+	
+	mesh->indices = fbuf;
 
 	for (int i = 0; i < vbuf.size / 3; i++) {
 		vertex_t v = {0};
@@ -131,7 +134,7 @@ mesh_t OBJ_parseFile(const char* path) {
 		v.color[2] = sin(i);
 		v.color[3] = 1;
 
-		ARRAY_APPEND(&mesh.vertices, v); 
+		ARRAY_APPEND(&mesh->vertices, v); 
 	}
 
 	return mesh;

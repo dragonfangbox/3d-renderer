@@ -3,7 +3,6 @@
  *its broken because of wsl2 so idk if it actually works.
  */ 
 
-
 #define ARENA_IMPLEMENTATION
 #include "arena.h"
 #include "types.h"
@@ -16,7 +15,7 @@
 
 int main() {
 	window_t win = {.size = {720, 480}};
-	camera_t cam = {.pos = {4, 0, 0}};
+	camera_t cam = {.pos = {4, 6, 0}};
 
 	mat4_identity(cam.view);
 	mat4_lookAt(cam.view, cam.pos, (vec3){0, 0, 0}, (vec3){0, 1, 0});
@@ -54,19 +53,20 @@ int main() {
 	u16 program = SHADER_createProgram(fragShadersrc, vertShadersrc);
 
 
-	renderObject_t testObj;
+	renderObject_t testRenderObj; 
 
-	mesh_t objTest = OBJ_parseFile("./cube.obj");
-	RENDERER_initMesh(&objTest);
+	mesh_t* meshObjTest = OBJ_parseFile("./cube.obj");
+	RENDERER_initMesh(meshObjTest);
 
 	material_t defaultMaterial;
 	RENDERER_initMaterial(&defaultMaterial, program);
 
-	RENDERER_initRenderObject(&testObj, &objTest, &defaultMaterial);
+	renderObject_t* newTestObj = RENDERER_newRenderObject(meshObjTest, &defaultMaterial);
 
-//	RENDERER_translateObject(&testObj, (vec3){0, 1, 0});
+	RENDERER_initRenderObject(&testRenderObj, meshObjTest, &defaultMaterial);
 
-	RENDERER_pushObject(&renderer, &testObj);
+//	RENDERER_pushObject(&renderer, &testObj);
+	RENDERER_pushObject(&renderer, newTestObj);
 
 	bool running = TRUE;
 	while(running) {
@@ -76,11 +76,16 @@ int main() {
 				running = FALSE;
 			} else if (event.key.type == SDL_KEYDOWN) {
 				switch (event.key.keysym.scancode) {
+				case SDL_SCANCODE_ESCAPE:
+					SDL_SetRelativeMouseMode(SDL_FALSE);
+					break;
 				case SDL_SCANCODE_W:
+					renderer.camera->pitch += 1;
 					break;
 				case SDL_SCANCODE_A:
 					break;
 				case SDL_SCANCODE_S:
+					renderer.camera->pitch -= 1;
 					break;
 				case SDL_SCANCODE_D:
 					break;
@@ -95,11 +100,8 @@ int main() {
 				i32 dx = event.motion.xrel;
 				i32 dy = event.motion.yrel;
 
-				renderer.camera->yaw += -dx * 0.01;
-				renderer.camera->pitch += -dy * 0.01;
-
-				mat4_identity(renderer.camera->view);
-				mat4_lookAt(renderer.camera->view, renderer.camera->pos, (vec3){0, renderer.camera->pitch, renderer.camera->yaw}, (vec3){0, 1, 0});
+				//renderer.camera->yaw += dx * 0.1;
+				//renderer.camera->pitch += dy * 0.1;
 			} else if (event.type == SDL_WINDOWEVENT && 
 					   event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
 				
@@ -117,6 +119,9 @@ int main() {
 		}
 
 		RENDERER_render(&renderer, window);
+
+		mat4_identity(renderer.camera->view);
+		mat4_lookAt(renderer.camera->view, renderer.camera->pos, (vec3){0, renderer.camera->pitch, renderer.camera->yaw}, (vec3){0, 1, 0});
 	}
 
 	RENDERER_destroy(&renderer);
