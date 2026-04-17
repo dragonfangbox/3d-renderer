@@ -3,16 +3,16 @@
 ## TODO
 
 Add a material struct that owns a shader and texture
-    * still need to do the texture part
+* still need to do the texture part
 
 OBJ file parser
 
 Take OBJ file output into mesh struct 
-    * turn vertice and indice arrays into a mesh
+* turn vertice and indice arrays into a mesh
 
 clean up the api and make it nice to use
-    * hide all sdl function calls
-    *create new functions to abstract opengl functions
+* hide all sdl function calls
+* create new functions to abstract opengl functions
 
 make things like the camera, window, and other structs easier to make with a "createObject" function. kind of correlates to the task above
 
