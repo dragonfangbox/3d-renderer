@@ -20,6 +20,7 @@ typedef struct {
 ARRAY_DEFINE(vertArray_t, vertex_t);
 
 typedef struct {
+	GLuint VAO;
 	GLuint VBO;
 	GLuint EBO;
 	vertArray_t vertices;
@@ -34,7 +35,7 @@ typedef struct {
 typedef struct {
 	mesh_t* mesh;
 	material_t* material;
-	GLuint VAO;
+//	GLuint VAO;
 	mat4 model;
 } renderObject_t;
 ARRAY_DEFINE(renderObjectArray_t, renderObject_t*);

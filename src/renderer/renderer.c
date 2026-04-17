@@ -28,14 +28,14 @@ void RENDERER_render(renderer_t* r, SDL_Window* window) {
 			RENDERER_setUniformMat4(obj->material, "model", obj->model);
 			RENDERER_setUniformMat4(obj->material, "view", r->camera->view);
 			RENDERER_setUniformMat4(obj->material, "proj", r->camera->proj);
-			glBindVertexArray(r->objects.data[i]->VAO);
+			glBindVertexArray(r->objects.data[i]->mesh->VAO);
 			glDrawElements(GL_TRIANGLES, obj->mesh->indices.size, GL_UNSIGNED_INT, 0);
 		} else {
 			glUseProgram(obj->material->shader);
 			RENDERER_setUniformMat4(obj->material, "model", obj->model);
 			RENDERER_setUniformMat4(obj->material, "view", r->camera->view);
 			RENDERER_setUniformMat4(obj->material, "proj", r->camera->proj);
-			glBindVertexArray(r->objects.data[i]->VAO);
+			glBindVertexArray(r->objects.data[i]->mesh->VAO);
 			glDrawArrays(GL_TRIANGLES, 0, r->objects.data[i]->mesh->vertices.size);
 		}
 	}

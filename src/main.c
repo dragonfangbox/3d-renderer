@@ -97,8 +97,8 @@ int main() {
 					break;
 				}
 			} else if (event.type == SDL_MOUSEMOTION) {
-				i32 dx = event.motion.xrel;
-				i32 dy = event.motion.yrel;
+				//i32 dx = event.motion.xrel;
+				//i32 dy = event.motion.yrel;
 
 				//renderer.camera->yaw += dx * 0.1;
 				//renderer.camera->pitch += dy * 0.1;
